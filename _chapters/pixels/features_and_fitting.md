@@ -8,7 +8,7 @@ You can start your notes here before you start diving into specific topics under
 
 The table of contents can link to each section so long as you match the names right (see comments in template.md for more elaboration on this!). This Markdown to HTML mapping doesn't like periods in the section titles and won't link them from the table of contents, so use dashes instead if you need to.
 
-- [First Big Topic](#first-big-topic)
+- [First Big Topic](#ransac:-conceptual-understanding)
 	- [Subtopic 1-1](#subtopic-1-1)
 	- [Subtopic 1-2](#subtopic-1-2)
 	- [Subtopic 1-3](#subtopic-1-3)
@@ -21,7 +21,7 @@ The table of contents can link to each section so long as you match the names ri
 [//]: # (Leave this line here, but you can replace the name field with anything! It's used in the HTML structure of the page but isn't visible to users)
 <a name='Topic 1'></a>
 
-## First Big Topic
+## RANSAC: Conceptual Understanding
 	
 Here you can start to talk about the first topic of your notes. You can bold text like **this**, or italicize text like *this*. If you want to make a numbered list it's as easy as
 1.  
