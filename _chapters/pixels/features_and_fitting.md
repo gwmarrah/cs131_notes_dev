@@ -38,7 +38,7 @@ Mateo Echeverri (mateoae), Travis Grafton (tjgraft), Jung-Won Ha (jwha23), Steph
 
 <a name='RANSAC Definition'></a>
 #### RANSAC Definition
-RANdom SAmple Consensus is a model fitting method for line detection. It uses an iterative process that takes a random sample of features, fits a line model, and looks for features that are “inliers” for that particular #line model. 
+RANdom SAmple Consensus is a model fitting method for line detection. It uses an iterative process that takes a random sample of features, fits a line model, and looks for features that are “inliers” for that particular line model. 
 
 
 <a name='Challenges Overcome by RANSAC'></a>
