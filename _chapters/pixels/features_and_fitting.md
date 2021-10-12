@@ -202,9 +202,9 @@ In refining the threshold, we have optimized RANSAC to correctly fit the model t
 In viewing the classified inliers, we can see that refining the threshold allowed us to have a more compact list of inliers. 
 
 <a name='section'></a>
-##Conceptual Understanding of Local Invariant Features
+## Conceptual Understanding of Local Invariant Features
 
-###Motivation
+### Motivation
 Cross-correlation has proven useful when pinpointing particular patterns within an image, provided that the pixel configuration between the pattern and the query image remains constant. However, global templates used for image matching with cross-correlation lack robustness with regards to scale changes, rotations, viewpoint changes, lighting changes, occlusions, and other similar variations. In turn, rather than concentrating on all pixels of an image, analyzing local invariant features—small image patches that are common across multiple pictures of the same scene—can lead to more accurate image matching and subsequent classification.
 
 <div align="center">
@@ -213,7 +213,7 @@ Cross-correlation has proven useful when pinpointing particular patterns within 
   <div> Example of an image matching task where a global template may not perform well. Source: Lecture 5 slides. </div>
 </div>
 
-###General Workflow
+### General Workflow
 To conduct image matching through local invariant features, we should generally follow the steps listed:
 
 1) **Find a set of distinctive keypoints.** Such keypoints should be representative of the object to be identified.
@@ -232,7 +232,7 @@ To conduct image matching through local invariant features, we should generally 
   <div> Depiction of the identification and comparison of descriptors for local invariant features. Source: Lecture 5 slides. </div>
 </div>
 
-###Common Requirements
+### Common Requirements
 Above all, we must address two central problems: detecting the same point independently in separate images of the same scene, which requires a repeatable detector; and subsequently matching each point in one image correctly to the corresponding point in a second image after the points have been localized in both images, which requires a reliable and distinctive descriptor. Local features should then satisfy the requirements listed:
 
 1) **Region extraction needs to be repeatable and accurate.** In order to be useful, the keypoint detector should be somewhat invariant to geometric transformations such as scale changes, translations, and rotations; robust or covariant to out-of-plane transformations; invariant to photometric transformations so that different lighting conditions do not affect descriptors corresponding to image keypoints; and robust to other variations such as noise, blur, and quantization.
@@ -275,7 +275,7 @@ One way to measure intensity change in images is with gradients. In this case, o
 
 This may look promising, but it cannot be directly applied to corners that are rotated because, in this case, the strength of the gradient magnitudes cannot be predicted. Therefore this measurement of change must be further formalized to fit this more general case.
  
-###Formulation for Harris Corner Detector
+### Formulation for Harris Corner Detector
 
 To reiterate, the goal for the Harris Corner Detector is to localize windows that result in a large change in intensity when shifted in any direction. To develop a formulation of this goal, first consider the single, center pixel of the window $(x, y)$. When shifted by an amount $(u, v)$, taking the difference between the value of the intensity at the original location, $I(x, y)$ and the shifted location, $I(x + u, y + v)$, will yield the measurement of change: $(I(x + u, y + v) – I(x, y))$. This calculation only results in the change for a single pixel, so it is accumulated around the shifted point within the window to yield the change in intensity for the entire window:
  $$E(u,v) = \sum_{x, y} w(x, y)[I(x + u, y + v) – I(x,y)]^2$$
