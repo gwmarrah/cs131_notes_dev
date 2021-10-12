@@ -329,6 +329,7 @@ plt.show()
 
 However, this doesn't give a list of points. At the end of the day, what we want is to know the coordinate location of the corners. We want the coordinates of the peak values. For that, we find the maximum values of the function.
 
+```
 '''
 @min_distance is how far we want the corners to be from each other. Its unit is pixels.
 It is good for checking that htere aren't other nearby max values.
@@ -336,7 +337,6 @@ It is good for checking that htere aren't other nearby max values.
 stronger that certain value are kept."
 '''
 
-```
 coords = corner_peaks(theta_b, min_distance=10, threshold_rel=0.02)                   
                       
 plt.figure(figsize=(30,15))
