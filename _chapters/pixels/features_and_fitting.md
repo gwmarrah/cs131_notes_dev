@@ -88,7 +88,7 @@ After fitting the initial line, inliers (within a pre-specified threshold) are d
 
 Let $w$ represent the fraction of inliers (points on the line), $n$ represent the points needed to define a model estimate (two in the case of line fitting), and $k$ represent the number of samples chosen. 
 
-The probability that at least one sample will be the true line can be derived through a series of steps: 
+The probability that at least one sample will compute the model of the true line can be derived through a series of steps: 
 1. The probability that a randomly chosen point is on the line is $w$ or the fraction of true inliers. 
 2. Therefore, the fraction that a sample of $n$ points are all part of the true line is $w^n$, or the probability that every point in the sample is on the line. 
 3. Which means that the probability that at least one point in the sample is not part of the true line is the complement or $1 - w^n$. 
