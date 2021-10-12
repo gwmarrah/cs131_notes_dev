@@ -59,13 +59,10 @@ The model with the most support (largest amount of inliers) is kept as the compu
 
 Only two points are needed to estimate a line. So, the first task for RANSAC line fitting is randomly selecting two points in the feature space to make an initial (potentially poor) line model. 
 
----
-<div align="center">
-  <img src="{{ site.baseurl }}/assets/images/initial-line-fit.png" width="400" align="center"/>
+<div class="fig figcenter fighighlight">
+  <img src="{{ site.baseurl }}/assets/images/initial-line-fit.png">
+<div class="figcaption">The first task of the RANSAC loop is to sample points from the features of the image (denoted by the blue points). After sampling, parameters for the line model are computed using the seed group.</div>
 </div>
-<sup> The first task of the RANSAC loop is to sample points from the features of the image (denoted by the blue points). After sampling, parameters for the line model are computed using the seed group.
-
----
 
 After fitting the initial line, inliers (within a prespecified threshold) are detected to collect votes to determine how much support there is for the model. This loop is repeated $k$ times and the line with the most support is kept after every iteration.
 
