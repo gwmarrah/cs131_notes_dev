@@ -326,6 +326,9 @@ plt.subplot(1,2,2); plt.imshow(theta_a, cmap="jet")
 plt.tight_layout()
 plt.show()
 ```
+<div class="fig figcenter fighighlight">
+  <img src="{{ site.baseurl }}/assets/images/1st-Output.png"></div>
+</div>
 
 Clearly, the corner_harris detector didn't catch the corners of the darkest squares in the image. That is because those corners don't have enough constrast (the picel intensities are too similar so the gradients aren't large enough. This can be solved by modifying the image contrast using the adjust_gamma method in scikit.
 
@@ -340,6 +343,10 @@ plt.subplot(1,2,2); plt.imshow(theta_b, cmap="jet")
 plt.tight_layout()
 plt.show()
 ```
+	
+<div class="fig figcenter fighighlight">
+  <img src="{{ site.baseurl }}/assets/images/2nd-Output.png"></div>
+</div>
 
 However, this doesn't give a list of points. At the end of the day, what we want is to know the coordinate location of the corners. We want the coordinates of the peak values. For that, we find the maximum values of the function.
 
@@ -358,3 +365,7 @@ plt.subplot(1,3,1); plt.imshow(gamma_corrected, cmap="gray"); plt.title("input",
 plt.subplot(1,3,2); plt.imshow(theta_b, cmap="jet"); plt.title("corner response function", fontsize=30)
 plt.subplot(1,3,3); plt.plot(coords[:,1], coords[:,0],'r.'); plt.imshow(theta_a, cmap="gray"); plt.title("peak locations", fontsize=30)
 ```
+
+<div class="fig figcenter fighighlight">
+  <img src="{{ site.baseurl }}/assets/images/3rd-Output.png"></div>
+</div>
