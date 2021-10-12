@@ -84,7 +84,7 @@ After fitting the initial line, inliers (within a prespecified threshold) are de
 </div>
 
 <a name='Determining the Value of k'></a>
-#### Determining the Value of k
+#### Determining the Value of "$k$"
 
 Let $w$ represent the fraction of inliers (points on the line), $n$ represent the points needed to define a model estimate (two in the case of line fitting), and $k$ represent the number of samples chosen. 
 
