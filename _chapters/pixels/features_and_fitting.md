@@ -21,16 +21,16 @@ authors: Mateo Echeverri (mateoae), Travis Grafton (tjgraft), Jung-Won Ha (jwha2
 [//]: # (Leave this line here, but you can replace the name field with anything! It's used in the HTML structure of the page but isn't visible to users)
 <a name='Topic 1'></a>
 
-#Conceptual Understanding of RANSAC
+# Conceptual Understanding of RANSAC
 
 
 <a name='RANSAC Definition'></a>
-####RANSAC Definition
+#### RANSAC Definition
 RANdom SAmple Consensus is a model fitting method for line detection. It uses an iterative process that takes a random sample of features, fits a line model, and looks for features that are “inliers” for that particular #line model. 
 
 
 <a name='Challenges Overcome by RANSAC'></a>
-####Challenges Overcome by RANSAC
+#### Challenges Overcome by RANSAC
 
 There are several challenges associated with line fitting:
 
@@ -55,13 +55,13 @@ The model with the most support (largest amount of inliers) is kept as the compu
 
 
 <a name='RANSAC Line Fitting Workflow'></a>
-####RANSAC Line Fitting Workflow
+#### RANSAC Line Fitting Workflow
 
 Only two points are needed to estimate a line. So, the first task for RANSAC line fitting is randomly selecting two points in the feature space to make an initial (potentially poor) line model. 
 
 ---
 <div align="center">
-  <img src=https://drive.google.com/uc?id=14pPPVmm9iHssmX8_CAu3oXqQufscirzF&authuser=gwmarrah%40stanford.edu&usp=drive_fs width="400" align="center"/>
+  img src="{{ site.baseurl }}/assets/images/initial-line-fit.png" width="400" align="center"/>
 </div>
 <sup> The first task of the RANSAC loop is to sample points from the features of the image (denoted by the blue points). After sampling, parameters for the line model are computed using the seed group.
 
@@ -71,8 +71,7 @@ After fitting the initial line, inliers (within a prespecified threshold) are de
 
 ---
 <div align="center">
-  <img src=https://drive.google.com/uc?id=14prjK45RdYphsEIuJPYT_j-RljPZJYvN&authuser=gwmarrah%40stanford.edu&usp=drive_fs
-width="400" align="center"/>
+  img src="{{ site.baseurl }}/assets/images/detect-inliers.png" width="400" align="center"/>
 </div>
 <sup> Once the line model is computed, inliers are detected and the support for the line model is quantified. The line model computed in this particular iteration was quite poor, but may improve in following iterations if a different sample is used.
 
