@@ -168,6 +168,7 @@ As evidenced from the edge map, there are a lot of noisy/outlier points in the i
 <div align="center">
   <img src="https://i.imgur.com/qu1Ki4Z.png"
  width="700" align="center"/>
+	</div>
 
 Let's replace our line estimator model to be RANSAC. 
 ```
@@ -178,6 +179,7 @@ ransac.fit(x.reshape(-1,1), y)
 <div align="center">
   <img src="https://i.imgur.com/cZgGl5n.png"
  width="700" align="center"/>
+	</div>
 
 The resulting line fit is better than the least squares regression estimate, but it still isn't to the standard that we are expecting. The line estimate is sitting between both street lines rather than exactly predicting just one.  
 
@@ -195,6 +197,7 @@ plt.tight_layout()
 <div align="center">
   <img src="https://i.imgur.com/JVfsaW5.png"
  width="700" align="center"/>
+	</div>
 
 We can see that RANSAC classified both street lines as being inliers, hence why our best fit line was fitted between both lines. By default, `RANSACRegressor()` sets the maximum residual for a data sample to be classified as an inlier to be the MAD (median absolute deviation) of the target values y. However, through the parameter `residual_threshold`, we can specify and refine the threshold. Let's specify the threshold to be 5 pixels to refine the amount of surrounding data points we classify as inliers. 
 
@@ -204,6 +207,7 @@ ransac = RANSACRegressor(base_estimator=LinearRegression(), residual_threshold=5
 <div align="center">
   <img src="https://i.imgur.com/lCYJJIF.png"
  width="700" align="center"/>
+	</div>
 
 
 In refining the threshold, we have optimized RANSAC to correctly fit the model to a single line in the image.  
@@ -211,6 +215,7 @@ In refining the threshold, we have optimized RANSAC to correctly fit the model t
 <div align="center">
   <img src="https://i.imgur.com/0DHPHod.png"
  width="700" align="center"/>
+	</div>
 	
 In viewing the classified inliers, we can see that refining the threshold allowed us to have a more compact list of inliers. 
 
@@ -327,7 +332,7 @@ plt.tight_layout()
 plt.show()
 ```
 <div class="fig figcenter fighighlight">
-  <img src="{{ site.baseurl }}/assets/images/1st-Output.png"></div>
+  <img src="{{ site.baseurl }}/assets/images/1st-Output.png">
 </div>
 
 Clearly, the corner_harris detector didn't catch the corners of the darkest squares in the image. That is because those corners don't have enough constrast (the picel intensities are too similar so the gradients aren't large enough. This can be solved by modifying the image contrast using the adjust_gamma method in scikit.
@@ -345,7 +350,7 @@ plt.show()
 ```
 	
 <div class="fig figcenter fighighlight">
-  <img src="{{ site.baseurl }}/assets/images/2nd-Output.png"></div>
+  <img src="{{ site.baseurl }}/assets/images/2nd-Output.png">
 </div>
 
 However, this doesn't give a list of points. At the end of the day, what we want is to know the coordinate location of the corners. We want the coordinates of the peak values. For that, we find the maximum values of the function.
@@ -367,5 +372,5 @@ plt.subplot(1,3,3); plt.plot(coords[:,1], coords[:,0],'r.'); plt.imshow(theta_a,
 ```
 
 <div class="fig figcenter fighighlight">
-  <img src="{{ site.baseurl }}/assets/images/3rd-Output.png"></div>
+  <img src="{{ site.baseurl }}/assets/images/3rd-Output.png">
 </div>
