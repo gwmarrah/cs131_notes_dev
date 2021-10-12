@@ -12,7 +12,7 @@ Mateo Echeverri (mateoae), Travis Grafton (tjgraft), Jung-Won Ha (jwha23), Steph
 	- [Challenges Overcome by RANSAC](#challenges-overcome-by-ransac)
 	- [RANSAC Algorithm for Line Fitting](#ransac-algorithm-for-line-fitting)
 	- [RANSAC Line Fitting Workflow](#ransac-line-fitting-workflow)
-	- [Determining the Value of k](determining-the-value-of-k)
+	- [Determining the Value of "$k$"](#determining-the-value-of-k)
 - [Optimizing RANSAC](#optimizing-ransac)
 - [RANSAC Coding Demo](#ransac-coding-demo) 
 - [Conceptual Understanding of Local Invariant Features](#conceptual-understanding-of-local-invariant-features)
@@ -201,6 +201,7 @@ In refining the threshold, we have optimized RANSAC to correctly fit the model t
 ![](https://i.imgur.com/0DHPHod.png)
 In viewing the classified inliers, we can see that refining the threshold allowed us to have a more compact list of inliers. 
 
+<a name='section'></a>
 ##Conceptual Understanding of Local Invariant Features
 
 ###Motivation
