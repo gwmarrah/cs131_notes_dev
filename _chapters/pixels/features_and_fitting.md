@@ -14,6 +14,16 @@ authors: Mateo Echeverri (mateoae), Travis Grafton (tjgraft), Jung-Won Ha (jwha2
 	- [Determining the Value of "k"](determining-the-value-of-"k")
 - [Optimizing RANSAC](#optimizing-ransac)
 - [RANSAC Coding Demo](#ransac-coding-demo) 
+- [Conceptual Understanding of Local Invariant Features](#conceptual-understanding-of-local-invariant-features)
+	- [Motivation](#motivation)
+	- [General Workflow](#general-workflow)
+	- [Common Requirements](#common-requirements) 
+- [Conceptual Understanding of the Harris Corner Detector](#conceptual-understanding-of-the-harris-corner-detector)
+	- [Goal of Harris Corner Detection](#goal-of-harris-corner-detection)
+	- [Basics of Corner Detection](#basics-of-corner-detection)
+	- [Formulation for Harris Corner Detector](#formulation-for-harris-corner-detector)
+- [Harris Corner Detector Matrix](#harris-corner-detector-matrix)
+- [Harris Corner Detector Example](#harris-corner-detector-example)
 
 [//]: # (This is how you can make a comment that won't appear in the web page! It might be visible on some machines/browsers so use this only for development.)
 
@@ -75,8 +85,8 @@ After fitting the initial line, inliers (within a prespecified threshold) are de
 
 ---
 
-<a name='Deterimining the Value of $k$'></a>
-#### Determining the Value of "$k$"
+<a name='Deterimining the Value of k'></a>
+#### Determining the Value of "k"
 
 Let $w$ represent the fraction of inliers (points on the line), $n$ represent the points needed to define a model estimate (two in the case of line fitting), and $k$ represent the number of samples chosen. 
 
@@ -184,7 +194,145 @@ ransac = RANSACRegressor(base_estimator=LinearRegression(), residual_threshold=5
 ```
 ![](https://i.imgur.com/lCYJJIF.png)
 
+
 In refining the threshold, we have optimized RANSAC to correctly fit the model to a single line in the image.  
 
 ![](https://i.imgur.com/0DHPHod.png)
 In viewing the classified inliers, we can see that refining the threshold allowed us to have a more compact list of inliers. 
+
+##Conceptual Understanding of Local Invariant Features
+
+###Motivation
+Cross-correlation has proven useful when pinpointing particular patterns within an image, provided that the pixel configuration between the pattern and the query image remains constant. However, global templates used for image matching with cross-correlation lack robustness with regards to scale changes, rotations, viewpoint changes, lighting changes, occlusions, and other similar variations. In turn, rather than concentrating on all pixels of an image, analyzing local invariant features—small image patches that are common across multiple pictures of the same scene—can lead to more accurate image matching and subsequent classification.
+
+<div align="center">
+  <img src=https://i.imgur.com/QRDuaER.png
+ width="400" align="center"/>
+  <div> Example of an image matching task where a global template may not perform well. Source: Lecture 5 slides. </div>
+</div>
+
+###General Workflow
+To conduct image matching through local invariant features, we should generally follow the steps listed:
+
+1) **Find a set of distinctive keypoints.** Such keypoints should be representative of the object to be identified.
+
+2) **Define a region around each keypoint.** Rather than concentrating on a single pixel where the keypoint is located, using an image patch around the pixel allows us to additionally consider factors such as texture and shape in the neighborhood of the pixel.
+
+3) **Extract and normalize the region content.** Normalization can standardize image patches that may otherwise vary in aspects such as viewpoint, size, and rotation.
+
+4) **Compute a local descriptor from the normalized region.** The content of each standardized image patch can be encapsulated through a computed vector. 
+
+5) **Match local descriptors.** After measuring the distance between the computed vectors corresponding to two separate images, we can declare the images to be similar if the aforementioned distance is below a defined threshold. 
+
+<div align="center">
+  <img src=https://i.imgur.com/p1ypDlK.png
+ width="400" align="center"/>
+  <div> Depiction of the identification and comparison of descriptors for local invariant features. Source: Lecture 5 slides. </div>
+</div>
+
+###Common Requirements
+Above all, we must address two central problems: detecting the same point independently in separate images of the same scene, which requires a repeatable detector; and subsequently matching each point in one image correctly to the corresponding point in a second image after the points have been localized in both images, which requires a reliable and distinctive descriptor. Local features should then satisfy the requirements listed:
+
+1) **Region extraction needs to be repeatable and accurate.** In order to be useful, the keypoint detector should be somewhat invariant to geometric transformations such as scale changes, translations, and rotations; robust or covariant to out-of-plane transformations; invariant to photometric transformations so that different lighting conditions do not affect descriptors corresponding to image keypoints; and robust to other variations such as noise, blur, and quantization.
+
+<div align="center">
+  <img src=https://i.imgur.com/GYMsHSN.png
+ width="400" align="center"/>
+  <div> Example of feature invariance with geometric transformations. Source: Lecture 5 slides. </div>
+</div>
+
+2) **Locality.** Too-large features lead to problems similar to those caused by global template matching. Features must then be local and thus robust to occlusion and clutter.
+
+3) **Quantity.** Detectors should produce a sufficient number of regions so that they are able to cover the particular object of interest.
+
+4) **Distinctiveness.** Keypoint regions should contain a distinctive structure. Regions should not capture overly homogeneous areas with notably flat color, since it will be difficult to match keypoints within such regions due to their homogeneous quality.
+
+5) **Efficiency.** The algorithms used must be efficient so that we are capable of achieving close to real-time performance.
+
+## Conceptual Understanding of the Harris Corner Detector
+###Goal of Harris Corner Detection
+Harris Corner Detection is a method of finding corners in an image using the concept of keypoint localization. Corners serve as excellent key points because they are repeatable in that they can be seen from multiple viewpoints, distinctive from their neighbors, and, in the region around a corner, the image gradient has two or more dominant orientations.
+###Basics of Corner Detection
+In order to see corners as keypoints that can be detected, there need to be certain design criteria. First, corner points should be easily recognizable by looking through a small window – they must be local. Second, moving this window in any direction should give a large change in intensity - it should possess good localization. 
+
+<div align="center">
+  <img src=https://i.imgur.com/Rh1HrCv.png
+ width="600" align="center"/>
+  <div> Illustration of shifting a window over different region types. Source: Lecture 5 slides. </div>
+</div>
+
+For example, moving this window anywhere in a flat region or along an edge yields no change in intensity. Moving it in any direction on a corner, however, yields significant change in intensity in all directions.
+
+One way to measure intensity change in images is with gradients. In this case, only the magnitude of intensity is important, so the gradient squared is used in each of the horizontal and vertical directions, $I_x^2$ and $I_y^2$. Consider the following cases for placing a window on different region types within an image and summing over the square of the gradients:
+
+
+*   Corner -  large $\sum I_x^2$,  large $\sum I_y^2$
+*   Edge in x-direction - small $\sum I_x^2$, large $\sum I_y^2$
+*   Flat - small $\sum I_x^2$, small $\sum I_y^2$
+
+
+This may look promising, but it cannot be directly applied to corners that are rotated because, in this case, the strength of the gradient magnitudes cannot be predicted. Therefore this measurement of change must be further formalized to fit this more general case.
+ 
+###Formulation for Harris Corner Detector
+
+To reiterate, the goal for the Harris Corner Detector is to localize windows that result in a large change in intensity when shifted in any direction. To develop a formulation of this goal, first consider the single, center pixel of the window $(x, y)$. When shifted by an amount $(u, v)$, taking the difference between the value of the intensity at the original location, $I(x, y)$ and the shifted location, $I(x + u, y + v)$, will yield the measurement of change: $(I(x + u, y + v) – I(x, y))$. This calculation only results in the change for a single pixel, so it is accumulated around the shifted point within the window to yield the change in intensity for the entire window:
+ $$E(u,v) = \sum_{x, y} w(x, y)[I(x + u, y + v) – I(x,y)]^2$$
+ Where:
+  *    $[I(x + u, y + v) – I(x,y)]^2$ is the intensity change for a single pixel
+  *    $w(x, y)$ is the window function which helps to weigh the importance of each pixel within the window
+ 
+
+This measure of change can then be approximated by using a Taylor Expansion to yield a new equation:
+ $$E(u, v) \approx \left[\begin{array}{cc} u & v \end{array} \right] M \left[\begin{array}{cc} u \\ v \end{array} \right]$$
+where $M$ is a 2x2 matrix computed from summing image derivatives over the window and weighing them:
+  $$M = \sum_{x, y} w(x, y) \left[\begin{array}{cc}I_x^2 & I_xI_y \\ I_xI_y & I_y^2\end{array} \right]$$
+Note that the matrix of image derivatives consists of both the square of the gradient in the $x$ and $y$ directions, as well as the product of the two.
+
+## Harris Corner Detector Matrix
+
+## Harris Corner Detector Example
+
+import numpy as np
+from skimage import io
+from skimage.feature import corner_harris, corner_peaks
+from matplotlib import pyplot as plt
+
+img = io.imread("mond.jpg", as_gray=True)
+'''
+The sigma that is passed to the  corner_harris method defines the 
+Gaussian used for the window function. A bigger sigma means a bigger
+neighborhood for deciding if there is a corner. 
+'''
+theta_a = corner_harris(img, sigma=2)
+plt.figure(figsize=(20,10))
+plt.subplot(1,2,1); plt.imshow(img, cmap="gray")
+plt.subplot(1,2,2); plt.imshow(theta_a, cmap="jet")
+plt.tight_layout()
+plt.show()
+
+Clearly, the corner_harris detector didn't catch the corners of the darkest squares in the image. That is because those corners don't have enough constrast (the picel intensities are too similar so the gradients aren't large enough. This can be solved by modifying the image contrast using the adjust_gamma method in scikit.
+
+from skimage import data, exposure, img_as_float
+gamma_corrected = exposure.adjust_gamma(img, 0.15)
+
+theta_b = corner_harris(gamma_corrected, sigma=2)
+plt.figure(figsize=(20,10))
+plt.subplot(1,2,1); plt.imshow(gamma_corrected, cmap="gray")
+plt.subplot(1,2,2); plt.imshow(theta_b, cmap="jet")
+plt.tight_layout()
+plt.show()
+
+However, this doesn't give a list of points. At the end of the day, what we want is to know the coordinate location of the corners. We want the coordinates of the peak values. For that, we find the maximum values of the function.
+
+'''
+@min_distance is how far we want the corners to be from each other. Its unit is pixels.
+It is good for checking that htere aren't other nearby max values.
+@threshold_rel is how strong do we want the corner function to be. E.g.,  "only corners
+stronger that certain value are kept."
+'''
+coords = corner_peaks(theta_b, min_distance=10, threshold_rel=0.02)                   
+                      
+plt.figure(figsize=(30,15))
+plt.subplot(1,3,1); plt.imshow(gamma_corrected, cmap="gray"); plt.title("input", fontsize=30)
+plt.subplot(1,3,2); plt.imshow(theta_b, cmap="jet"); plt.title("corner response function", fontsize=30)
+plt.subplot(1,3,3); plt.plot(coords[:,1], coords[:,0],'r.'); plt.imshow(theta_a, cmap="gray"); plt.title("peak locations", fontsize=30)
