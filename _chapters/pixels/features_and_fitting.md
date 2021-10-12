@@ -76,7 +76,7 @@ Only two points are needed to estimate a line. So, the first task for RANSAC lin
   <div class="figcaption"> The first task of the RANSAC loop is to sample points from the features of the image (denoted by the blue points). After sampling, parameters for the line model are computed using the seed group.</div>
 </div>
 
-After fitting the initial line, inliers (within a prespecified threshold) are detected to collect votes to determine how much support there is for the model. This loop is repeated $k$ times and the line with the most support is kept after every iteration.
+After fitting the initial line, inliers (within a pre-specified threshold) are detected to collect votes to determine how much support there is for the model. This loop is repeated $k$ times and the line with the most support is kept after every iteration.
 
 <div class="fig figcenter fighighlight">
   <img src="{{ site.baseurl }}/assets/images/detect-inliers.png">
