@@ -166,7 +166,7 @@ plt.tight_layout()
 As evidenced from the edge map, there are a lot of noisy/outlier points in the image. Least squares regression is unable to distinguish from inlier and outlier points, so the ultimate line of best fit it detects is highly inaccurate. 
 
 <div align="center">
-  <img src=https://i.imgur.com/qu1Ki4Z.png
+  <img src="https://i.imgur.com/qu1Ki4Z.png"
  width="700" align="center"/>
 
 Let's replace our line estimator model to be RANSAC. 
@@ -176,7 +176,7 @@ ransac.fit(x.reshape(-1,1), y)
 ```
 
 <div align="center">
-  <img src=https://i.imgur.com/cZgGl5n.png
+  <img src="https://i.imgur.com/cZgGl5n.png"
  width="700" align="center"/>
 
 The resulting line fit is better than the least squares regression estimate, but it still isn't to the standard that we are expecting. The line estimate is sitting between both street lines rather than exactly predicting just one.  
@@ -193,7 +193,7 @@ plt.subplot(1,3,3); plt.plot(x_inliers, y_inliers, 'g.'); plt.imshow(edge, cmap=
 plt.tight_layout()
 ```
 <div align="center">
-  <img src=https://i.imgur.com/JVfsaW5.png
+  <img src="https://i.imgur.com/JVfsaW5.png"
  width="700" align="center"/>
 
 We can see that RANSAC classified both street lines as being inliers, hence why our best fit line was fitted between both lines. By default, `RANSACRegressor()` sets the maximum residual for a data sample to be classified as an inlier to be the MAD (median absolute deviation) of the target values y. However, through the parameter `residual_threshold`, we can specify and refine the threshold. Let's specify the threshold to be 5 pixels to refine the amount of surrounding data points we classify as inliers. 
@@ -202,14 +202,14 @@ We can see that RANSAC classified both street lines as being inliers, hence why 
 ransac = RANSACRegressor(base_estimator=LinearRegression(), residual_threshold=5)                
 ```
 <div align="center">
-  <img src=https://i.imgur.com/lCYJJIF.png
+  <img src="https://i.imgur.com/lCYJJIF.png"
  width="700" align="center"/>
 
 
 In refining the threshold, we have optimized RANSAC to correctly fit the model to a single line in the image.  
 
 <div align="center">
-  <img src=https://i.imgur.com/0DHPHod.png
+  <img src="https://i.imgur.com/0DHPHod.png"
  width="700" align="center"/>
 	
 In viewing the classified inliers, we can see that refining the threshold allowed us to have a more compact list of inliers. 
