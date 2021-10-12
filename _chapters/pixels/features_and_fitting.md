@@ -3,6 +3,7 @@ title: Features and Fitting
 keywords:
 order: 0
 ---
+Mateo Echeverri (mateoae), Travis Grafton (tjgraft), Jung-Won Ha (jwha23), Stephanie Hu (stephhu1), George Walters-Marrah (gwmarrah), Derian Williams (derianw)
 
 - [RANSAC: Conceptual Understanding](#ransac-conceptual-understanding)
 	- [Subtopic 1-1](#subtopic-1-1)
