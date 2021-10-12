@@ -108,7 +108,8 @@ In essence, from a minimal sample of *n* points, RANSAC computes its best estima
 
 ---
 <div align="center">
-  <img src=https://i.imgur.com/xYvm5DS.png width="400" align="center"/>
+  <img src=https://i.imgur.com/xYvm5DS.png 
+       width="400" align="center"/>
 </div>
 
 ---
@@ -120,7 +121,8 @@ From the current set of classified inliner points, we utilize least squares regr
 ---
 
 <div align="center">
-  <img src=https://i.imgur.com/D4lz30J.png width="400" align="center"/>
+  <img src=https://i.imgur.com/D4lz30J.png 
+       width="400" align="center"/>
 </div>
 
 <sup>Perform least squares regression with the classified inliner points to find a new best fit line. The red line signifies the new model computed from the inline points. The red lines vertically extending from the green data points to the red regression line indicate the least squares regression minimal distance.</sup>
@@ -133,7 +135,7 @@ As witnessed, this can lead us to further improving our model estimate. Conseque
 
 <div align="center">
   <img src=https://i.imgur.com/gg21BX8.png
- width="400" align="center"/>
+ 	width="400" align="center"/>
 </div>
 
 ---
