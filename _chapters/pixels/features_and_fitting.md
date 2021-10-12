@@ -78,13 +78,10 @@ Only two points are needed to estimate a line. So, the first task for RANSAC lin
 
 After fitting the initial line, inliers (within a prespecified threshold) are detected to collect votes to determine how much support there is for the model. This loop is repeated $k$ times and the line with the most support is kept after every iteration.
 
----
 <div class="fig figcenter fighighlight">
   <img src="{{ site.baseurl }}/assets/images/detect-inliers.png">
   <div class="figcaption"> Once the line model is computed, inliers are detected and the support for the line model is quantified. The line model computed in this particular iteration was quite poor, but may improve in following iterations if a different sample is used.</div>
 </div>
-
----
 
 <a name='Deterimining the Value of k'></a>
 #### Determining the Value of k
@@ -106,6 +103,9 @@ Above, we described the general 4 steps that the RANSAC algorithm continuously r
 
 In essence, from a minimal sample of *n* points, RANSAC computes its best estimate and uses that to divide all the data points into "inliners" and outliers. 
 
+<div class="fig figcenter fighighlight">
+  <img src="{{ site.baseurl }}/assets/images/detect-inliers.png"></div>
+</div>
 
 ---
 <div align="center">
