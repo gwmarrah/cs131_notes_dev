@@ -12,7 +12,7 @@ Mateo Echeverri (mateoae), Travis Grafton (tjgraft), Jung-Won Ha (jwha23), Steph
 	- [Challenges Overcome by RANSAC](#challenges-overcome-by-ransac)
 	- [RANSAC Algorithm for Line Fitting](#ransac-algorithm-for-line-fitting)
 	- [RANSAC Line Fitting Workflow](#ransac-line-fitting-workflow)
-	- [Determining the Value of "k"](determining-the-value-of-"k")
+	- [Determining the Value of "k"](determining-the-value-of-k)
 - [Optimizing RANSAC](#optimizing-ransac)
 - [RANSAC Coding Demo](#ransac-coding-demo) 
 - [Conceptual Understanding of Local Invariant Features](#conceptual-understanding-of-local-invariant-features)
