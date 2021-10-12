@@ -106,9 +106,10 @@ Above, we described the general 4 steps that the RANSAC algorithm continuously r
 
 In essence, from a minimal sample of *n* points, RANSAC computes its best estimate and uses that to divide all the data points into "inliners" and outliers. 
 
+
 ---
 <div align="center">
-  <img src=https://i.imgur.com/xYvm5DS.png 
+  <img src="https://i.imgur.com/xYvm5DS.png" 
        width="400" align="center"/>
 </div>
 
