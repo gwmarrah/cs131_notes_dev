@@ -12,7 +12,8 @@ authors: Mateo Echeverri (mateoae), Travis Grafton (tjgraft), Jung-Won Ha (jwha2
 	- [RANSAC Algorithm for Line Fitting](#ransac-algorithm-for-line-fitting)
 	- [RANSAC Line Fitting Workflow](#ransac-line-fitting-workflow)
 	- [Determining the Value of "$k$"](determining-the-value-of-"$k$")
-- [Second Big Topic](#topic2)
+- [Optimizing RANSAC](#optimizing-ransac)
+- [RANSAC Coding Demo](#ransac-coding-demo) 
 
 [//]: # (This is how you can make a comment that won't appear in the web page! It might be visible on some machines/browsers so use this only for development.)
 
@@ -87,3 +88,103 @@ The probability that at least one sample will be the true line can be derived th
 5. The complement of this is the probability that at least one of the $k$ samples models the true line or $1 - (1 - w^n)^k$.
 
 Using this result, we can calculate the value of $k$ that will give a $0.99$ probability of at least one of the $k$ samples successfully modeling the true line. To do this, plug in $w$ and $k$ (usually given or can be inferred), then set the probability of at least one success equal to $0.99$ and solve for $k$.
+
+## Optimizing RANSAC
+
+Above, we described the general 4 steps that the RANSAC algorithm continuously repeats for a finite number of iterations until it finds a model that best fits the target line(s). Subsequently, at the end of each iteration, there is an additional step that we can take to further improve the model's line-fitting. 
+
+In essence, from a minimal sample of *n* points, RANSAC computes its best estimate and uses that to divide all the data points into "inliners" and outliers. 
+
+---
+<div align="center">
+  <img src=https://i.imgur.com/xYvm5DS.png width="400" align="center"/>
+</div>
+
+---
+
+Before we try to compute another estimate from a new random set of points, we can further improve this current estimate by utilizing the classified inliner data points.
+
+From the current set of classified inliner points, we utilize least squares regression to find a new estimate for the line of best fit. 
+
+---
+
+<div align="center">
+  <img src=https://i.imgur.com/D4lz30J.png width="400" align="center"/>
+</div>
+
+<sup>Perform least squares regression with the classified inliner points to find a new best fit line. The red line signifies the new model computed from the inline points. The red lines vertically extending from the green data points to the red regression line indicate the least squares regression minimal distance.</sup>
+
+---
+
+As witnessed, this can lead us to further improving our model estimate. Consequently, by recalculating the line of best fit and its corresponding thresholds, this also changes which datapoints are classified as inliners and outliers. So a good course of action is to alternate between model fitting and re-classification of inliner/outlier data points. 
+
+---
+
+<div align="center">
+  <img src=https://i.imgur.com/gg21BX8.png
+ width="400" align="center"/>
+</div>
+
+---
+## RANSAC Coding Demo
+We will utilize RANSAC to detect the painted lines in this image. 
+
+<div align="center">
+  <img src=https://i.imgur.com/dopvJp2.jpg
+ width="400" align="center"/>
+</div>
+
+We want to first run Canny edge detection to get a list of points. Then we will first use Least Squares Regression as our line estimation algorithm. 
+
+```
+img = io.imread("road.jpg", as_gray=True)
+edge = feature.canny(img, sigma=5)
+y, x = np.nonzero(edge)
+reg = LinearRegression().fit(x.reshape(-1,1), y)
+print(f"Line equation: y = {reg.coef_[0]:.2f}*x + {reg.intercept_:.2f}")
+
+x_line = np.linspace(0,img.shape[1]-1).reshape(-1,1)
+y_line = reg.predict(x_line)
+
+plt.figure(figsize=(20,10))
+plt.subplot(1,3,1); plt.imshow(img, cmap="gray"); plt.title("input image", fontsize=20);
+plt.subplot(1,3,2); plt.imshow(edge, cmap="gray"); plt.title("edge map", fontsize=20);
+plt.subplot(1,3,3); plt.imshow(edge, cmap="gray"); plt.title("least squares line", fontsize=20);
+plt.plot(x_line, y_line, 'r')
+plt.tight_layout()
+```
+As evidenced from the edge map, there are a lot of noisy/outlier points in the image. Least squares regression is unable to distinguish from inlier and outlier points, so the ultimate line of best fit it detects is highly inaccurate. 
+![](https://i.imgur.com/qu1Ki4Z.png)
+
+Let's replace our line estimator model to be RANSAC. 
+```
+ransac = RANSACRegressor(base_estimator=LinearRegression())
+ransac.fit(x.reshape(-1,1), y)
+```
+![](https://i.imgur.com/cZgGl5n.png)
+The resulting line fit is better than the least squares regression estimate, but it still isn't to the standard that we are expecting. The line estimate is sitting between both street lines rather than exactly predicting just one.  
+
+To understand what went wrong, let's run the code below to see which data points RANSAC classified as inliers. 
+```
+x_inliers = x[np.nonzero(ransac.inlier_mask_)]
+y_inliers = y[np.nonzero(ransac.inlier_mask_)]
+print(f"Found {x_inliers.size} inliers.")
+plt.figure(figsize=(20,10))
+plt.subplot(1,3,1); plt.imshow(edge, cmap="gray"); plt.title("edge map", fontsize=20);
+plt.subplot(1,3,2); plt.plot(x_line, y_line, 'r--'); plt.imshow(edge, cmap="gray"); plt.title("line with ransac", fontsize=20)
+plt.subplot(1,3,3); plt.plot(x_inliers, y_inliers, 'g.'); plt.imshow(edge, cmap="gray"); plt.title("inliers", fontsize=20)
+plt.tight_layout()
+```
+![](https://i.imgur.com/JVfsaW5.png)
+
+We can see that RANSAC classified both street lines as being inliers, hence why our best fit line was fitted between both lines. By default, `RANSACRegressor()` sets the maximum residual for a data sample to be classified as an inlier to be the MAD (median absolute deviation) of the target values y. However, through the parameter `residual_threshold`, we can specify and refine the threshold. Let's specify the threshold to be 5 pixels to refine the amount of surrounding data points we classify as inliers. 
+
+```
+ransac = RANSACRegressor(base_estimator=LinearRegression(), residual_threshold=5)                
+```
+![](https://i.imgur.com/lCYJJIF.png)
+
+In refining the threshold, we have optimized RANSAC to correctly fit the model to a single line in the image.  
+
+![](https://i.imgur.com/0DHPHod.png)
+In viewing the classified inliers, we can see that refining the threshold allowed us to have a more compact list of inliers. 
