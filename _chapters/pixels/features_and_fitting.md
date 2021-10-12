@@ -11,7 +11,7 @@ authors: Mateo Echeverri (mateoae), Travis Grafton (tjgraft), Jung-Won Ha (jwha2
 	- [Challenges Overcome by RANSAC](#challenges-overcome-by-ransac)
 	- [RANSAC Algorithm for Line Fitting](#ransac-algorithm-for-line-fitting)
 	- [RANSAC Line Fitting Workflow](#ransac-line-fitting-workflow)
-	- [Determining the Value of $k$](determining-the-value-of-k)
+	- [Determining the Value of "$k$"](determining-the-value-of-"k")
 - [Second Big Topic](#topic2)
 
 [//]: # (This is how you can make a comment that won't appear in the web page! It might be visible on some machines/browsers so use this only for development.)
