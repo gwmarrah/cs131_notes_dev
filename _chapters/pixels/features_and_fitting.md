@@ -103,10 +103,6 @@ Above, we described the general 4 steps that the RANSAC algorithm continuously r
 
 In essence, from a minimal sample of *n* points, RANSAC computes its best estimate and uses that to divide all the data points into "inliners" and outliers. 
 
-<div class="fig figcenter fighighlight">
-  <img src=https://i.imgur.com/xYvm5DS.png></div>
-</div>
-
 ---
 <div align="center">
   <img src="https://i.imgur.com/xYvm5DS.png" 
@@ -122,7 +118,7 @@ From the current set of classified inliner points, we utilize least squares regr
 ---
 
 <div align="center">
-  <img src=https://i.imgur.com/D4lz30J.png 
+  <img src="https://i.imgur.com/D4lz30J.png" 
        width="400" align="center"/>
 </div>
 
@@ -135,7 +131,7 @@ As witnessed, this can lead us to further improving our model estimate. Conseque
 ---
 
 <div align="center">
-  <img src=https://i.imgur.com/gg21BX8.png
+  <img src="https://i.imgur.com/gg21BX8.png"
  	width="400" align="center"/>
 </div>
 
@@ -144,7 +140,7 @@ As witnessed, this can lead us to further improving our model estimate. Conseque
 We will utilize RANSAC to detect the painted lines in this image. 
 
 <div align="center">
-  <img src=https://i.imgur.com/dopvJp2.jpg
+  <img src="https://i.imgur.com/dopvJp2.jpg"
  width="400" align="center"/>
 </div>
 
@@ -211,7 +207,7 @@ In viewing the classified inliers, we can see that refining the threshold allowe
 Cross-correlation has proven useful when pinpointing particular patterns within an image, provided that the pixel configuration between the pattern and the query image remains constant. However, global templates used for image matching with cross-correlation lack robustness with regards to scale changes, rotations, viewpoint changes, lighting changes, occlusions, and other similar variations. In turn, rather than concentrating on all pixels of an image, analyzing local invariant features—small image patches that are common across multiple pictures of the same scene—can lead to more accurate image matching and subsequent classification.
 
 <div align="center">
-  <img src=https://i.imgur.com/QRDuaER.png
+  <img src="https://i.imgur.com/QRDuaER.png"
  width="400" align="center"/>
   <div> Example of an image matching task where a global template may not perform well. Source: Lecture 5 slides. </div>
 </div>
@@ -230,7 +226,7 @@ To conduct image matching through local invariant features, we should generally 
 5) **Match local descriptors.** After measuring the distance between the computed vectors corresponding to two separate images, we can declare the images to be similar if the aforementioned distance is below a defined threshold. 
 
 <div align="center">
-  <img src=https://i.imgur.com/p1ypDlK.png
+  <img src="https://i.imgur.com/p1ypDlK.png"
  width="400" align="center"/>
   <div> Depiction of the identification and comparison of descriptors for local invariant features. Source: Lecture 5 slides. </div>
 </div>
@@ -241,7 +237,7 @@ Above all, we must address two central problems: detecting the same point indepe
 1) **Region extraction needs to be repeatable and accurate.** In order to be useful, the keypoint detector should be somewhat invariant to geometric transformations such as scale changes, translations, and rotations; robust or covariant to out-of-plane transformations; invariant to photometric transformations so that different lighting conditions do not affect descriptors corresponding to image keypoints; and robust to other variations such as noise, blur, and quantization.
 
 <div align="center">
-  <img src=https://i.imgur.com/GYMsHSN.png
+  <img src="https://i.imgur.com/GYMsHSN.png"
  width="400" align="center"/>
   <div> Example of feature invariance with geometric transformations. Source: Lecture 5 slides. </div>
 </div>
@@ -261,7 +257,7 @@ Harris Corner Detection is a method of finding corners in an image using the con
 In order to see corners as keypoints that can be detected, there need to be certain design criteria. First, corner points should be easily recognizable by looking through a small window – they must be local. Second, moving this window in any direction should give a large change in intensity - it should possess good localization. 
 
 <div align="center">
-  <img src=https://i.imgur.com/Rh1HrCv.png
+  <img src="https://i.imgur.com/Rh1HrCv.png"
  width="600" align="center"/>
   <div> Illustration of shifting a window over different region types. Source: Lecture 5 slides. </div>
 </div>
