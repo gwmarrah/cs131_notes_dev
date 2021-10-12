@@ -95,7 +95,7 @@ The probability that at least one sample will compute the model of the true line
 4. We can then compute the probability that $k$ samples will fail by raising the probability of a single sample failing (at least one point in the sample not being on the line) to the $k$ power. This results in the formula $(1-w^n)^k$ which is the probability that every single sample fails to model the true line. 
 5. The complement of this is the probability that at least one of the $k$ samples models the true line or $1 - (1 - w^n)^k$.
 
-Using this result, we can calculate the value of $k$ that will give a $0.99$ probability of at least one of the $k$ samples successfully modeling the true line. To do this, plug in $w$ and $k$ (usually given or can be inferred), then set the probability of at least one success equal to $0.99$ and solve for $k$.
+Using this result, we can calculate the value of $k$ that will give a $0.99$ probability of at least one of the $k$ samples successfully modeling the true line. To do this, plug in $w$ and $n$ (usually given or can be inferred), then set the probability of at least one success equal to $0.99$ and solve for $k$.
 
 ## Optimizing RANSAC
 
