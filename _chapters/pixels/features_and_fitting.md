@@ -1,15 +1,17 @@
 ---
 title: Features and Fitting
-keywords:
+keywords: RANSAC, Local Invariant Features, Harris Corner Detector
 order: 0
 authors: Mateo Echeverri (mateoae), Travis Grafton (tjgraft), Jung-Won Ha (jwha23), Stephanie Hu (stephhu1), George Walters-Marrah (gwmarrah), Derian Williams (derianw)
 ---
 
 
-- [RANSAC: Conceptual Understanding](#ransac-conceptual-understanding)
-	- [Subtopic 1-1](#subtopic-1-1)
-	- [Subtopic 1-2](#subtopic-1-2)
-	- [Subtopic 1-3](#subtopic-1-3)
+- [Conceptual Understanding of RANSAC](#conceptual-understanding-of-ransac)
+	- [RANSAC Definition](#ransac-definition)
+	- [Challenges Overcome by RANSAC](#challenges-overcome-by-ransac)
+	- [RANSAC Algorithm for Line Fitting](#ransac-algorithm-for-line-fitting)
+	- [RANSAC Line Fitting Workflow](#ransac-line-fitting-workflow)
+	- [Determining the Value of $k$](determining-the-value-of-k)
 - [Second Big Topic](#topic2)
 
 [//]: # (This is how you can make a comment that won't appear in the web page! It might be visible on some machines/browsers so use this only for development.)
@@ -19,81 +21,74 @@ authors: Mateo Echeverri (mateoae), Travis Grafton (tjgraft), Jung-Won Ha (jwha2
 [//]: # (Leave this line here, but you can replace the name field with anything! It's used in the HTML structure of the page but isn't visible to users)
 <a name='Topic 1'></a>
 
-## RANSAC: Conceptual Understanding
-	
-Here you can start to talk about the first topic of your notes. You can bold text like **this**, or italicize text like *this*. If you want to make a numbered list it's as easy as
-1.  
-2. 
-3. 
-
-- Bullet
-- points
-- are
-- similar 
-
-For a more detailed cheatsheet on the most important functionality of Markdown, check out this link https://wordpress.com/support/markdown-quick-reference/, which you can format in Markdown with your own [link title](https://wordpress.com/support/markdown-quick-reference/)
+#Conceptual Understanding of RANSAC
 
 
-<a name='Subtopic 1-1'></a>
-### Subtopic 1-1
-You might want to include images in your notes, since Computer Vision as a field is blessed with tons of cool visualizations. Here's an example from the CS 231N notes page we included as a reference for you:
+<a name='RANSAC Definition'></a>
+####RANSAC Definition
+RANdom SAmple Consensus is a model fitting method for line detection. It uses an iterative process that takes a random sample of features, fits a line model, and looks for features that are “inliers” for that particular #line model. 
 
-<div class="fig figcenter fighighlight">
-  <img src="{{ site.baseurl }}/assets/examples/classify.png">
-  <div class="figcaption">Put your informative caption here! If you really want to mess around with the classes in this div container then feel free, but inserting images just like this should work great!</div>
+
+<a name='Challenges Overcome by RANSAC'></a>
+####Challenges Overcome by RANSAC
+
+There are several challenges associated with line fitting:
+
+1. Since there are multiple line models (or instances) in an image it is difficult to determine which points belong to each line model (if any). Extra edge points can lead to clutter that may confuse the algorithm and lead to spurious line detection.
+2. A subset of the whole line may be detected by the algorithm, which leads to missing parts of the line. These line segments must be bridged together or extended to form the entire line, even while there are missing edge points.
+3. Noisy edge points may not be exactly co-linear even while belonging to the same line. The underlying parameters of the line need to be detected even while using edge points with imprecise coordinates.
+4. It is not feasible to check all possible combinations of edge points. This naive approach leads to a performance of O(N^2) which is not scalable to large tasks of line fitting.
+
+RANSAC addresses all of these difficulties by using random sampling and voting as a fitting technique. RANSAC cycles through the features and lets them vote for particular model parameters that they are compatible with. Even though outliers would still vote, their votes are usually not correlated with features that are part of lines, and the resulting model will not have much support.
+
+
+<a name='RANSAC Algorithm for Line Fitting'></a>
+#### RANSAC Algorithm for Line Fitting
+
+The RANSAC loop is repeated for $k$ iterations:
+1. Take a random sample of edge points to make a seed group
+2. Estimate a line model by computing the parameters of a line from the seed group
+3. Find features within a threshold that support this model. Features that support the model are referred to as inliers
+4. If there is a sufficient amount of support for the model, compute the least-squares estimate of the model with the inclusion of the inliers.
+
+The model with the most support (largest amount of inliers) is kept as the computed line instance.
+
+
+<a name='RANSAC Line Fitting Workflow'></a>
+####RANSAC Line Fitting Workflow
+
+Only two points are needed to estimate a line. So, the first task for RANSAC line fitting is randomly selecting two points in the feature space to make an initial (potentially poor) line model. 
+
+---
+<div align="center">
+  <img src=https://drive.google.com/uc?id=14pPPVmm9iHssmX8_CAu3oXqQufscirzF&authuser=gwmarrah%40stanford.edu&usp=drive_fs width="400" align="center"/>
 </div>
+<sup> The first task of the RANSAC loop is to sample points from the features of the image (denoted by the blue points). After sampling, parameters for the line model are computed using the seed group.
 
-<a name='Subtopic 1-2'></a>
-### Subtopic 1-2
-Sometimes you might want to insert some code snippets into your notes. As an example, here's a snippet of python code taken from the CS 231N notes:
-```python
-Xtr, Ytr, Xte, Yte = load_CIFAR10('data/cifar10/') # a magic function we provide
-# flatten out all images to be one-dimensional
-Xtr_rows = Xtr.reshape(Xtr.shape[0], 32 * 32 * 3) # Xtr_rows becomes 50000 x 3072
-Xte_rows = Xte.reshape(Xte.shape[0], 32 * 32 * 3) # Xte_rows becomes 10000 x 3072
-```
+---
 
-<a name='Subtopic 1-3'></a>
-### Subtopic 1-3
-Sometimes you might want to write some mathematical equations, and LaTeX is a great tool for that! You can write an inline equation like this \\( a^2 = b^2 \\), or you can display an equation on its own line like this! \\[ a^2 = b^2 + c^2 \\]
+After fitting the initial line, inliers (within a prespecified threshold) are detected to collect votes to determine how much support there is for the model. This loop is repeated $k$ times and the line with the most support is kept after every iteration.
 
-You can also apply LaTeX syntax to label your equations and refer to them later! Here's the equation:
+---
+<div align="center">
+  <img src=https://drive.google.com/uc?id=14prjK45RdYphsEIuJPYT_j-RljPZJYvN&authuser=gwmarrah%40stanford.edu&usp=drive_fs
+width="400" align="center"/>
+</div>
+<sup> Once the line model is computed, inliers are detected and the support for the line model is quantified. The line model computed in this particular iteration was quite poor, but may improve in following iterations if a different sample is used.
 
-$$ \begin{equation} \label{your_label} a^2 = b^2 + c^2 + d^2 + e^2 \end{equation} $$
-
-and here's a linked reference to it: \eqref{your_label}. For now, this configuration likes the \\"\\$\\$ equation stuff ... \\$\\$\\" syntax to have an empty line above and below it, but it displays the same anyway.
-
-**For a guide on LaTeX syntax and how to write mathematical equations and formulas with it, check out [this link](https://www.overleaf.com/learn/latex/mathematical_expressions)** 
-
-**Here's a short guide on how to use the basics of LaTeX**
-- You've seen above the syntax to start and end an equation, so now let's work on what you fill in the middle
-- You can make variables and expressions **bold** in equations too: \\(\mathbf{x} + y\\)
-- Superscripts and subscripts are easy: use the ^ and _ symbol and bound your super/sub script by {} if it's more than one character. For example: \\(e^{-x+10}\\)
-- Greek letters are also simple, use the \ character with their written name with optional capitalization, such as alpha or Alpha. For example: \\(\alpha + \beta + \gamma + \delta + \Gamma + \Delta\\). Not all capital greek letters work like this, but you can search online for solutions if this trick fails or reach out to the CA's. In general the \ character in LaTeX is the gateway to all kinds of special characters and functionalities.
-- Sums and Products are really useful in Latex. You can use both superscripts and subscripts to mark the bounds: \\(\log(\prod_{i=0}^{2n}i^2) = \sum_{i=0}^{2n}\log (i^2)\\)
-- Another useful trick is to write out a matrix or a vector in LaTex. There's a lot of customization you can do with this, so check out this [page](https://www.overleaf.com/learn/latex/Matrices) for more details. Here's some examples in our Markdown environment: 
+---
 
 
-$$\begin{bmatrix}
-1 & 2 & 3\\
-a & b & c
-\end{bmatrix}$$
+<a name='Deterimining the Value of $k$'></a>
+#### Determining the Value of "$k$"
 
-$$\begin{bmatrix}
-1\\
-2\\
-3\\
-\end{bmatrix}$$
+Let $w$ represent the fraction of inliers (points on the line), $n$ represent the points needed to define a model estimate (two in the case of line fitting), and $k$ represent the number of samples chosen. 
 
-$$\begin{bmatrix}
-1 & 2 & 3\\
-\end{bmatrix}$$
+The probability that at least one sample will be the true line can be derived through a series of steps: 
+1. The probability that a randomly chosen point is on the line is $w$ or the fraction of true inliers. 
+2. Therefore, the fraction that a sample of $n$ points are all part of the true line is $w^n$, or the probability that every point in the sample is on the line. 
+3. Which means that the probability that at least one point in the sample is not part of the true line is the complement or $1 - w^n$. 
+4. We can then compute the probability that $k$ samples will fail by raising the probability of a single sample failing (at least one point in the sample not being on the line) to the $k$ power. This results in the formula $(1-w^n)^k$ which is the probability that every single sample fails to model the true line. 
+5. The complement of this is the probability that at least one of the $k$ samples models the true line or $1 - (1 - w^n)^k$.
 
-As with the labelled equations, it makes a difference whether the lines above and below the equation are blank, so keep that in mind while debugging! 
-
-
-
-
-<a name='Topic 2'></a>
-## Second Big Topic
-This should give you the primary tools to develop your notes. Check out the [markdown quick reference](https://wordpress.com/support/markdown-quick-reference/) for any further Markdown functionality that you may find useful, and reach out to the teaching team on Piazza if you have any questions about how to create your lecture notes
+Using this result, we can calculate the value of $k$ that will give a $0.99$ probability of at least one of the $k$ samples successfully modeling the true line. To do this, plug in $w$ and $k$ (usually given or can be inferred), then set the probability of at least one success equal to $0.99$ and solve for $k$.
