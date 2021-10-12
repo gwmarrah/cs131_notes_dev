@@ -77,7 +77,6 @@ After fitting the initial line, inliers (within a prespecified threshold) are de
 
 ---
 
-
 <a name='Deterimining the Value of $k$'></a>
 #### Determining the Value of "$k$"
 
