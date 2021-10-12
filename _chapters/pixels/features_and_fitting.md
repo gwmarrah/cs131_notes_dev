@@ -254,9 +254,9 @@ Above all, we must address two central problems: detecting the same point indepe
 5) **Efficiency.** The algorithms used must be efficient so that we are capable of achieving close to real-time performance.
 
 ## Conceptual Understanding of the Harris Corner Detector
-###Goal of Harris Corner Detection
+### Goal of Harris Corner Detection
 Harris Corner Detection is a method of finding corners in an image using the concept of keypoint localization. Corners serve as excellent key points because they are repeatable in that they can be seen from multiple viewpoints, distinctive from their neighbors, and, in the region around a corner, the image gradient has two or more dominant orientations.
-###Basics of Corner Detection
+### Basics of Corner Detection
 In order to see corners as keypoints that can be detected, there need to be certain design criteria. First, corner points should be easily recognizable by looking through a small window – they must be local. Second, moving this window in any direction should give a large change in intensity - it should possess good localization. 
 
 <div align="center">
