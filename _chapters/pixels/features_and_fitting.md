@@ -5,6 +5,7 @@ order: 0
 authors: Mateo Echeverri (mateoae), Travis Grafton (tjgraft), Jung-Won Ha (jwha23), Stephanie Hu (stephhu1), George Walters-Marrah (gwmarrah), Derian Williams (derianw)
 ---
 
+Mateo Echeverri (mateoae), Travis Grafton (tjgraft), Jung-Won Ha (jwha23), Stephanie Hu (stephhu1), George Walters-Marrah (gwmarrah), Derian Williams (derianw)
 
 - [Conceptual Understanding of RANSAC](#conceptual-understanding-of-ransac)
 	- [RANSAC Definition](#ransac-definition)
