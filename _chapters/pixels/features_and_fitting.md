@@ -61,7 +61,7 @@ Only two points are needed to estimate a line. So, the first task for RANSAC lin
 
 ---
 <div align="center">
-  img src="{{ site.baseurl }}/assets/images/initial-line-fit.png" width="400" align="center"/>
+  <img src="{{ site.baseurl }}/assets/images/initial-line-fit.png" width="400" align="center"/>
 </div>
 <sup> The first task of the RANSAC loop is to sample points from the features of the image (denoted by the blue points). After sampling, parameters for the line model are computed using the seed group.
 
@@ -71,7 +71,7 @@ After fitting the initial line, inliers (within a prespecified threshold) are de
 
 ---
 <div align="center">
-  img src="{{ site.baseurl }}/assets/images/detect-inliers.png" width="400" align="center"/>
+  <img src="{{ site.baseurl }}/assets/images/detect-inliers.png" width="400" align="center"/>
 </div>
 <sup> Once the line model is computed, inliers are detected and the support for the line model is quantified. The line model computed in this particular iteration was quite poor, but may improve in following iterations if a different sample is used.
 
