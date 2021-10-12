@@ -49,7 +49,7 @@ There are several challenges associated with line fitting:
 1. Since there are multiple line models (or line instances) in an image it is difficult to determine which points belong to each line model. Extra edge points can lead to clutter that may confuse the algorithm and lead to spurious line detection.
 2. A subset of the whole line may be detected by the algorithm, which leads to missing parts of the line. These line segments must be bridged together or extended to form the entire line, even while there are missing edge points.
 3. Noisy edge points may not be exactly co-linear even while belonging to the same line. The underlying parameters of the line need to be detected even while using edge points with imprecise coordinates.
-4. It is not feasible to check all possible combinations of edge points. This naive approach leads to a performance of O(N^2) which is not scalable to large tasks of line fitting.
+4. It is not feasible to check all possible combinations of edge points. This naive approach leads to a performance of $O(N^2)$ which is not scalable to large tasks of line fitting.
 
 RANSAC addresses all of these difficulties by using random sampling and voting as a fitting technique. RANSAC cycles through the features and lets them vote for particular model parameters that they are compatible with. Even though outliers would still vote, their votes are usually not correlated with features that are part of lines, and the resulting model will not have much support.
 
