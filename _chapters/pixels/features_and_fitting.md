@@ -23,7 +23,7 @@ Mateo Echeverri (mateoae), Travis Grafton (tjgraft), Jung-Won Ha (jwha23), Steph
 	- [Goal of Harris Corner Detection](#goal-of-harris-corner-detection)
 	- [Basics of Corner Detection](#basics-of-corner-detection)
 	- [Formulation for Harris Corner Detector](#formulation-for-harris-corner-detector)
-- [Interpreting the Harris Corner Detector Matrix](#interpreting-harris-corner-detector-matrix)
+- [Interpreting the Harris Corner Detector Matrix](#interpreting-the-harris-corner-detector-matrix)
 	- [The Window Function](#the-window-function)
 	- [The Harris Corner Detector Algorithm](#the-harris-corner-detector-algorithm) 
 - [Harris Corner Detector Example](#harris-corner-detector-example)
