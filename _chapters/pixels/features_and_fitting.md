@@ -23,7 +23,9 @@ Mateo Echeverri (mateoae), Travis Grafton (tjgraft), Jung-Won Ha (jwha23), Steph
 	- [Goal of Harris Corner Detection](#goal-of-harris-corner-detection)
 	- [Basics of Corner Detection](#basics-of-corner-detection)
 	- [Formulation for Harris Corner Detector](#formulation-for-harris-corner-detector)
-- [Harris Corner Detector Matrix](#harris-corner-detector-matrix)
+- [Interpreting the Harris Corner Detector Matrix](#interpreting-harris-corner-detector-matrix)
+	- [The Window Function](#the-window-function)
+	- [The Harris Corner Detector Algorithm](#the-harris-corner-detector-algorithm) 
 - [Harris Corner Detector Example](#harris-corner-detector-example)
 
 [//]: # (This is how you can make a comment that won't appear in the web page! It might be visible on some machines/browsers so use this only for development.)
@@ -308,7 +310,81 @@ where $M$ is a 2x2 matrix computed from summing image derivatives over the windo
   $$M = \sum_{x, y} w(x, y) \left[\begin{array}{cc}I_x^2 & I_xI_y \\ I_xI_y & I_y^2\end{array} \right]$$
 Note that the matrix of image derivatives consists of both the square of the gradient in the $x$ and $y$ directions, as well as the product of the two.
 
-## Harris Corner Detector Matrix
+## Interpreting the Harris Corner Detector Matrix 
+
+Using the example of a simple axis-aligned corner, we expect the following image gradients, as shown here:
+
+
+<div align="center">
+  <img src=https://i.imgur.com/JCzbUmu.png
+ width="600" align="center"/>
+  <div> Image Gradients Over an Axis-Aligned Corner. Source: Lecture 5 slides. </div>
+</div>
+
+For a flat surface of constant or near-constant intensity, we expect both $I_x$ and $I_y$ to be zero across the pixels there. In our example image, this is equivalent to the white space or the black corner.
+
+
+For an edge, we expect a large gradient in the direction normal to that edge with a zero gradient in the direction parallel to it. We can again refer to our example image and see that, for the horizontal edge, $I_y$ is large and $I_x$ is zero. This indicates the change along the edge from black pixels to white pixels in the $y$ direction. Likewise, we expect a large $I_x$ and zero $I_y$ for the vertical edge.
+
+
+Based on this principle, we can conclude that if either $\Sigma I_x^2$ or $\Sigma I_y^2$ (the diagonal entries of $M$) are zero we are not at a corner. 
+
+To expand this to cover images with corners that are not necessarily axis-aligned, we can rewrite $M$ as follows.
+
+First, note that $M$ is a symmetric matrix, so we can apply Eigenvalue Decomposition to rewrite it in the form of its eigenvalues and eigenvectors as 
+$M = R^{-1} \left[\begin{array}{cc}\lambda_1 & 0 \\ 0 & \lambda_2\end{array} \right] R$
+
+
+From this decomposition, we can see that a rotated corner would produce the same eigenvalues as an equivalent, axis-aligned corner.
+
+In other words, we can detect the presence of a corner by comparing the eigenvalues of $M$.
+
+If $\lambda_1$ >> $\lambda_2$ or $\lambda_2$ >> $\lambda_1$, this indicates the presence of an edge.
+
+If both $\lambda_1$ and $\lambda_2$ are both small, this indicates that we are in a “flat” region.
+
+If $\lambda_1$ and $\lambda_2$ are both large and approximately equal, this indicates a corner.
+
+<div align="center">
+  <img src=https://i.imgur.com/JT0Sd7G.png
+ width="600" align="center"/>
+  <div> Eigenvalues Over Image. Source: Lecture 5 slides. </div>
+</div>
+
+As a shorthand way of comparing the eigenvalues without explicitly calculating them, we can use the Corner Response Function:
+
+$\theta = det(M) - \alpha (tr(M)^2)$\
+$\theta = \lambda_1 \lambda_2 - \alpha(\lambda_1 + \lambda_2)^2 $
+
+If the Corner Response function returns a value $\theta > 0$, this indicates that both eigenvalues are strong and that there is a corner.
+
+### The Window Function
+
+The Window function $w(x, y)$ is a way of describing the relative "importance" of each pixel in the area. We can use either a Uniform window or a Gaussian window.
+
+With a uniform window, all pixels within the window are 1, and all pixels outside the window are 0. This is straightforward, but importantly NOT rotation invariant.
+
+With a Gaussian window, we treat the middle pixels as more important, and thus the end result is rotation invariant.
+
+### The Harris Corner Detector Algorithm
+
+In summary, we start by computing the Second Moment Matrix $M$ for every pixel in the image:
+
+We first calculate the image derivatives $I_x$ and $I_y$ and then their squares $I_x^2$, $I_y^2$, and $I_xI_y$. Recall that we can apply Gaussian smoothing as we differentiate.
+
+We then apply the Gaussian windowing function as follows:
+
+$M( \sigma_I, \sigma_D) = g(\sigma_I) \ast \left[\begin{array}{cc}I_x^2(\sigma_D) & I_xI_y(\sigma_D) \\ I_xI_y(\sigma_D) & I_y^2(\sigma_D)\end{array} \right]$
+
+We then use the Corner Response Function to locate the points with two strong eigenvalues:
+
+$\theta = det[M(\sigma_I, \sigma_D)] - \alpha [trace(M(\sigma_I, \sigma_D))]^2$
+
+$\theta = g(I_x^2)g(I_y^2) -[g(I_xI_y)]^2 - \alpha [g(I_x^2) + g(I_y^2)]^2$
+
+(Note that $\alpha$ is just a small constant between ~$0.04 - 0.06$)
+
+Lastly, we localize the maximum points using non-maximum suppression. 
 
 ## Harris Corner Detector Example
 
