@@ -316,7 +316,7 @@ Using the example of a simple axis-aligned corner, we expect the following image
 
 
 <div align="center">
-  <img src=https://i.imgur.com/JCzbUmu.png
+  <img src="https://i.imgur.com/JCzbUmu.png"
  width="600" align="center"/>
   <div> Image Gradients Over an Axis-Aligned Corner. Source: Lecture 5 slides. </div>
 </div>
@@ -346,7 +346,7 @@ If both $\lambda_1$ and $\lambda_2$ are both small, this indicates that we are i
 If $\lambda_1$ and $\lambda_2$ are both large and approximately equal, this indicates a corner.
 
 <div align="center">
-  <img src=https://i.imgur.com/JT0Sd7G.png
+  <img src="https://i.imgur.com/JT0Sd7G.png"
  width="600" align="center"/>
   <div> Eigenvalues Over Image. Source: Lecture 5 slides. </div>
 </div>
